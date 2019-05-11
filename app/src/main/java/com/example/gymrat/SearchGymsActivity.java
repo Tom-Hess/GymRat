@@ -77,6 +77,7 @@ public class SearchGymsActivity extends AppCompatActivity {
             @Override
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
+
             }
 
             @Override

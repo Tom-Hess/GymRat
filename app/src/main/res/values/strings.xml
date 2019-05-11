@@ -5,5 +5,5 @@
     <string name="title_add">Add Review</string>
     <string name="label_squat_racks">Number of Squat Racks</string>
     <string name="label_overall_rating">Overall Rating</string>
-
+    <string name="label_bench_presses">Number of Bench Presses</string>
 </resources>
