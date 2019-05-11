@@ -3,4 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_search">Search</string>
     <string name="title_add">Add Review</string>
+    <string name="label_squat_racks">Number of Squat Racks</string>
+    <string name="label_overall_rating">Overall Rating</string>
+
 </resources>

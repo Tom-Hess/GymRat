@@ -20,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_home:
                     return true;
                 case R.id.navigation_search:
+                    Intent searchGyms = new Intent(MainActivity.this, SearchGymsActivity.class);
+                    startActivity(searchGyms);
                     return true;
                 case R.id.navigation_add_review:
                     Intent addReview = new Intent(MainActivity.this, AddReview.class);
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.setSelectedItemId(R.id.navigation_home);
     }
 
 }
