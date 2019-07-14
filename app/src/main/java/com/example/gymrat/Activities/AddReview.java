@@ -1,4 +1,4 @@
-package com.example.gymrat;
+package com.example.gymrat.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,11 +7,17 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RatingBar;
+import android.widget.Spinner;
 
+import com.example.gymrat.Model.Review;
+import com.example.gymrat.R;
+import com.example.gymrat.sqlite.database.DatabaseHelper;
 import com.google.android.gms.common.api.Status;
-
-// Add an import statement for the client library.
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.TypeFilter;
@@ -21,24 +27,31 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 
 import java.util.Arrays;
 
-public class SearchGymsActivity extends AppCompatActivity {
+public class AddReview extends AppCompatActivity {
 
+
+    private Spinner squatRacksSpinner;
+    private BottomNavigationView navigation;
+    private Spinner benchPressesSpinner;
+    private Button addReviewButton;
+    private EditText commentsEditText;
+    private RatingBar overallRatingBar;
+    private DatabaseHelper db;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    Intent mainActivity = new Intent(SearchGymsActivity.this, MainActivity.class);
-                    startActivity(mainActivity);
+                    Intent addReview = new Intent(AddReview.this, MainActivity.class);
+                    startActivity(addReview);
                     return true;
                 case R.id.navigation_search:
+                    Intent searchGyms = new Intent(AddReview.this, SearchGymsActivity.class);
+                    startActivity(searchGyms);
                     return true;
                 case R.id.navigation_add_review:
-                    Intent addReview = new Intent(SearchGymsActivity.this, AddReview.class);
-                    startActivity(addReview);
                     return true;
             }
             return false;
@@ -48,11 +61,30 @@ public class SearchGymsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_gyms);
+        setContentView(R.layout.activity_add_review);
+        db = new DatabaseHelper(this);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        commentsEditText = (EditText)findViewById(R.id.et_comments);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        navigation.setSelectedItemId(R.id.navigation_search);
+        addReviewButton = (Button) findViewById(R.id.btnAddReview);
+        navigation.setSelectedItemId(R.id.navigation_add_review);
+        overallRatingBar = findViewById(R.id.overallRatingBar);
+        initializeSpinners();
+        addReviewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Review newReview = new Review();
+                //TODO: fix bad code
+                newReview.setBenchPresses(Integer.parseInt(benchPressesSpinner.getSelectedItem().toString()));
+                newReview.setSquatRacks(Integer.parseInt(squatRacksSpinner.getSelectedItem().toString()));
+                newReview.setComment(commentsEditText.getText().toString());
+                newReview.setOverallRating(overallRatingBar.getNumStars());
+                //TODO: add more fields
+                // Add review to database
+                db.insertReview(newReview);
+            }
+        });
 
         // Initialize Places.
         Places.initialize(getApplicationContext(), "AIzaSyBKz2lUZl_wGyIUSwonKfCWs-p26H1UyGw");
@@ -88,6 +120,20 @@ public class SearchGymsActivity extends AppCompatActivity {
                 // TODO: Handle the error.
             }
         });
+    }
+
+    public void initializeSpinners(){
+        squatRacksSpinner = (Spinner) findViewById(R.id.squat_racks_spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> numberArrayAdapter = ArrayAdapter.createFromResource(this,
+                R.array.number_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        numberArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the numberArrayAdapter to the spinner
+        squatRacksSpinner.setAdapter(numberArrayAdapter);
+
+        benchPressesSpinner = (Spinner) findViewById(R.id.bench_presses_spinner);
+        benchPressesSpinner.setAdapter(numberArrayAdapter);
     }
 
 }
