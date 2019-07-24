@@ -1,5 +1,6 @@
 package com.example.gymrat.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.gymrat.Model.Review;
 import com.example.gymrat.R;
@@ -58,6 +60,14 @@ public class AddReview extends AppCompatActivity {
         }
     };
 
+    public void showAddedToast() {
+        Context context = getApplicationContext();
+        CharSequence text = "Added new review! Thanks for your review!";
+        int duration = Toast.LENGTH_LONG;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +93,7 @@ public class AddReview extends AppCompatActivity {
                 //TODO: add more fields
                 // Add review to database
                 db.insertReview(newReview);
+                showAddedToast();
             }
         });
 
